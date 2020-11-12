@@ -1,0 +1,186 @@
+onScriptError=onScriptFailure=null
+
+	if (!_isDataPassed()) {
+		$urlhost = "build";
+	}
+
+function testMethodGet() {
+	_navigateTo("/demo/php/request_headers.php");
+	var $href = _fetch(window.top.location.href);
+	$request = new RESTRequest();
+	$request.setHeader("Accept-Encoding", "deflate,sdch");
+	$request.setURL($href);
+	$request.addToQueryString("Place", "Banga&lore");
+	$request.addToQueryString("PIN", "5600 68");
+	var $p = new Parameter();
+	$p.add("Name", "Jane");
+	$p.add("Age", "25");
+	$request.addToBody($p);
+	$response = $request.submit("get");
+	var $responseBody = $response.getBodyAsString();
+	//	_sahi.print("\n----------\n" + $responseBody + "\n----------\n");
+	_assert($responseBody.indexOf("Request Method : GET") != -1);
+	_assert($responseBody.indexOf("Request URI : /demo/php/request_headers.php?Place=Banga&lore&PIN=5600 68") != -1);
+	_assert($responseBody.indexOf("Query String : Place=Banga&lore&PIN=5600 68") != -1);
+	_assert($responseBody.indexOf("Request Body : </br>") != -1);
+}
+
+function xtestREST401() {
+	$request = new RESTRequest();
+	$request.setURL("http://" + $urlhost + "/demo/401/index.htm");
+	$request.setCredentials("testuser", "password");
+
+	$response = new RESTResponse();
+	$response = $request.submit("get");
+
+	var $s = $response.getResponseCode();
+	_assertEqual("200",$s);
+}
+
+function testMethodPost() {
+	_navigateTo("/demo/php/request_headers.php");
+	var $href = _fetch(window.top.location.href);
+	$request = new RESTRequest();
+	$request.setHeader("Accept-Encoding", "deflate,sdch");
+	$request.setURL($href);
+	$request.addToQueryString("Place", "Bangalore");
+	var $p = new Parameter();
+	$p.add("Name", "Jane");
+	$p.add("Age", "25");
+	$request.addToBody($p);
+	$response = $request.submit("post");
+	var $responseBody = $response.getBodyAsString();
+	_assert($responseBody.indexOf("Request Method : POST") != -1);
+	_assert($responseBody.indexOf("Request URI : /demo/php/request_headers.php?Place=Bangalore") != -1);
+	_assert($responseBody.indexOf("Query String : Place=Bangalore") != -1);
+	_assert($responseBody.indexOf("Request Body : Name=Jane&Age=25</br>") != -1);
+}
+/**
+*	Commented out for passing the build
+*/
+function xtestMethodDelete() {
+	_navigateTo("/demo/php/request_headers.php");
+	var $href = _fetch(window.top.location.href);
+	$request = new RESTRequest();
+	$request.setURL($href);
+	$response = $request.submit("Delete");
+	_assert($response.getBodyAsString().indexOf("Request Method : DELETE") != -1);
+}
+
+function testHttpDefaultGetCredentialKey(){
+	$request = new RESTRequest();
+	var $url ="http://" + $urlhost+"/demo/401/index.htm";
+	_assertEqual("http://" + $urlhost+":80", $request.getCredentialKey($url));
+}
+
+function testHttpsDefaultGetCredentialKey() {
+	$request = new RESTRequest();
+	var $url ="https://" + $urlhost+"/demo/401/index.htm";
+	_assertEqual("https://" + $urlhost+":443", $request.getCredentialKey($url));
+}
+
+function testHttpsWithPortGetCredentialKey() {
+	$request = new RESTRequest();
+	var $url ="http://" + $urlhost+":8888/demo/401/index.htm";
+	_assertEqual("http://" + $urlhost+":8888", $request.getCredentialKey($url));
+}
+
+function testHttpWithPortGetCredentialKey() {
+	$request = new RESTRequest();
+	var $url ="http://" + $urlhost+":50/demo/401/index.htm";
+	_assertEqual("http://" + $urlhost+":50", $request.getCredentialKey($url));
+}
+
+function testURLWithoutSingleSlashGetCredentialKey(){
+	$request = new RESTRequest();
+	var $url ="http://" + $urlhost;
+	_assertEqual("http://" + $urlhost+":80", $request.getCredentialKey($url));
+}
+
+function xtestXmlNameSpaceTest(){
+	$request = new RESTRequest();
+	$request.setURL("http://www.webservicex.net/geoipservice.asmx/GetGeoIP");
+	$request.addToQueryString("IPAddress", "72.14.228.129");
+	$response = $request.submit("GET");
+	var $responseBody = $response.getBodyAsString();
+	$responseBody = $responseBody.replace(/<\?xml.*?>/g, '').replace(/\n/g, '').replace(/\r/g,'');
+	var $responseBodyObj = new XML($responseBody);
+	default xml namespace = $responseBodyObj.name().uri;
+	_assertEqual("200", $response.getResponseCode());
+	_assertNotNull($responseBodyObj.ReturnCode);
+	_assertEqual("1", $responseBodyObj.ReturnCode.toString());
+	_assertNotNull($responseBodyObj.IP);
+	_assertEqual("72.14.228.129", $responseBodyObj.IP.toString());
+	_assertNotNull($responseBodyObj.ReturnCodeDetails);
+	_assertEqual("Success", $responseBodyObj.ReturnCodeDetails.toString());
+	_assertNotNull($responseBodyObj.CountryName);
+	_assertEqual("United States", $responseBodyObj.CountryName.toString());
+	_assertNotNull($responseBodyObj.CountryCode);
+	_assertEqual("USA", $responseBodyObj.CountryCode.toString());
+}
+
+function testEncodeBodyParam(){
+	$request = new RESTRequest();
+	$request.setURL("http://sahitest.com/demo/php/request_headers.php");
+	var $pin="(5)60102";
+	$request.addToQueryString("PINCODE", $pin);
+	$response = $request.submit("GET");
+	_assertEqual("200", $response.getResponseCode());
+	var $responseBody = decodeURIComponent($response.getBodyAsString());
+	_assert($responseBody.indexOf( $pin ) != -1);
+}
+
+function xtestHeaderContainSpecialCharacter(){
+	$request = new RESTRequest();
+	$request.setURL("https://twitter.com/search-home");
+//	$request.setHeader(":path", "/search-home");
+	$request.setHeader("accept-encoding", "gzip, deflate, br");
+	$request.setHeader("accept-language", "en,en-US;q=0.8");
+	$request.setHeader("upgrade-insecure-requests", "1");
+//	$request.setHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36");
+	$request.setHeader("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+//	$request.setHeader(":authority", "twitter.com");
+	$request.setHeader("cookie", "ct0=a406b39043ad19e0a539a39fc6ab38a4; guest_id=v1:149916099908694482; _ga=GA1.2.1801731052.1499161003; _gid=GA1.2.903379832.1499161003; _gat=1; privacy_2017=1; _twitter_sess=BAh7CSIKZmxhc2hJQzonQWN0aW9uQ29udHJvbGxlcjo6Rmxhc2g6OkZsYXNo%0ASGFzaHsABjoKQHVzZWR7ADoPY3JlYXRlZF9hdGwrCK909QxdAToMY3NyZl9p%0AZCIlYTllNmI0MDRlMGFlMTYwYjJhMWFkZWU2ZDAwNTczNjA6B2lkIiVjYTNi%0ANTVkYzBiZWY3N2JjYjY4MjViMDE4OTcxMWY5Yg%3D%3D--1a9e579decf70c4ed45b7d27e8bb9a1e74e4a462");
+//	$request.setHeader(":scheme", "https");
+//	$request.setHeader(":method", "GET");
+	$response = $request.submit("GET");
+	var $responseBody = $response.getBodyAsString();
+	_assertEqual("200", $response.getResponseCode());
+	_assertEqual('no-cache, no-store, must-revalidate, pre-check=0, post-check=0', $response.getHeader('cache-control'));
+	//_assertEqual('gzip', $response.getHeader('content-encoding')); // Apache client removes the encoding. Thus content-encoding will be null in response. So commenting.
+	//_assertEqual('script-src https://connect.facebook.net https://cm.g.doubleclick.net https://ssl.google-analytics.com https://graph.facebook.com https://twitter.com \'unsafe-eval\' https://*.twimg.com https://api.twitter.com https://analytics.twitter.com https://publish.twitter.com https://ton.twitter.com \'unsafe-inline\' https://syndication.twitter.com https://www.google.com https://t.tellapart.com https://platform.twitter.com https://www.google-analytics.com \'self\'; font-src https://twitter.com https://*.twimg.com data: https://ton.twitter.com https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com https://netdna.bootstrapcdn.com \'self\'; media-src https://v.cdn.vine.co https://twitter.com https://amp.twimg.com https://*.twimg.com https://ton.twitter.com https://mtc.cdn.vine.co blob: \'self\'; connect-src https://rmpdhdsnappytv-vh.akamaihd.net https://prod-video-eu-central-1.pscp.tv https://graph.facebook.com https://*.giphy.com https://dwo3ckksxlb0v.cloudfront.net https://smmdhdsnappytv-vh.akamaihd.net https://*.twimg.com https://embed.pscp.tv https://api.twitter.com https://prod-video-eu-west-1.pscp.tv https://rmmdhdsnappytv-vh.akamaihd.net https://prod-video-us-west-2.pscp.tv https://pay.twitter.com https://prod-video-us-west-1.pscp.tv https://analytics.twitter.com https://vmap.snappytv.com https://*.twprobe.net https://prod-video-ap-northeast-1.pscp.tv https://smdhdsnappytv-vh.akamaihd.net https://syndication.twitter.com https://sentry.io https://rmdhdsnappytv-vh.akamaihd.net https://media.riffsy.com https://mmdhdsnappytv-vh.akamaihd.net https://embed.periscope.tv https://smpdhdsnappytv-vh.akamaihd.net https://prod-video-sa-east-1.pscp.tv https://upload.twitter.com https://proxsee.pscp.tv https://mdhdsnappytv-vh.akamaihd.net https://prod-video-ap-southeast-2.pscp.tv https://dev-video-us-west-2.pscp.tv https://prod-video-us-east-1.pscp.tv \'self\' https://vmap.grabyo.com https://prod-video-ap-southeast-1.pscp.tv https://mpdhdsnappytv-vh.akamaihd.net https://dev-video-eu-west-1.pscp.tv; style-src https://fonts.googleapis.com https://twitter.com https://*.twimg.com https://translate.googleapis.com https://ton.twitter.com \'unsafe-inline\' https://platform.twitter.com https://maxcdn.bootstrapcdn.com https://netdna.bootstrapcdn.com \'self\'; object-src https://twitter.com https://pbs.twimg.com; default-src \'self\'; frame-src https://staticxx.facebook.com https://twitter.com https://*.twimg.com https://5415703.fls.doubleclick.net https://player.vimeo.com https://pay.twitter.com https://www.facebook.com https://ton.twitter.com https://syndication.twitter.com https://vine.co twitter: https://www.youtube.com https://platform.twitter.com https://upload.twitter.com https://s-static.ak.facebook.com https://4337974.fls.doubleclick.net \'self\' https://donate.twitter.com; img-src https://graph.facebook.com https://prod-thumbnail.pscp.tv https://*.giphy.com https://twitter.com https://*.twimg.com https://ad.doubleclick.net data: https://lumiere-a.akamaihd.net https://fbcdn-profile-a.akamaihd.net https://www.facebook.com https://ton.twitter.com https://*.fbcdn.net https://syndication.twitter.com https://media.riffsy.com https://www.google.com https://stats.g.doubleclick.net https://platform.twitter.com https://api.mapbox.com https://www.google-analytics.com blob: https://prod-thumbnail-small.pscp.tv https://prod-thumbnail-small.periscope.tv \'self\' https://prod-thumbnail.periscope.tv; report-uri https://twitter.com/i/csp_report?a=NVQWGYLXFVZXO2LGOQ======&ro=false;', decodeURIComponent($response.getHeader('content-security-policy')));
+	_assertEqual('text/html; charset=utf-8', $response.getHeader('content-type'));
+	//	_assertEqual('tsa_b', $response.getHeader('server'));
+	//for aws server name is tsa_b and for local server name is tsa_k
+	//_assertEqual('200 OK', $response.getHeader('status'));
+	_assertEqual('nosniff', $response.getHeader('x-content-type-options'));
+	//_assertEqual('BouncerCompliant', $response.getHeader('x-twitter-response-tags'));
+	//_assertEqual('IE=edge,chrome=1', $response.getHeader('x-ua-compatible'));
+	_assertEqual('0', $response.getHeader('x-xss-protection'));
+}
+	
+function testPostXmlDataToSoapRequest(){
+	var $request = new RESTRequest();
+	$request.setHeader("Content-Type", "application/soap+xml");
+	$request.setURL("http://iis.sahitest.com/soap/Calculator.asmx?op=Add");
+	var $body =
+	"<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+	"<soap12:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope\">" +
+	"  <soap12:Body>" +
+	"    <Add xmlns=\"http://tempuri.org/\">" +
+	"      <a>2</a>" +
+	"      <b>2</b>" +
+	"    </Add>" +
+	"  </soap12:Body>" +
+	"</soap12:Envelope>";
+	$request.setBody($body);
+	var $response = $request.submit("post");
+	_assertEqual("200", $response.getResponseCode());
+	_assertTrue($response.getBodyAsString().indexOf("<AddResult>4</AddResult>") != -1);
+}
+
+var $suiteInfo = _suiteInfo();
+var $baseurl = $suiteInfo["baseURL"];
+var $url = $baseurl + "php/session_counter.php";
+
+_runUnitTests();

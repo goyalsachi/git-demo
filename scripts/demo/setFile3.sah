@@ -1,0 +1,43 @@
+_resource("upload me.txt");
+_resource("uploadme2.txt");
+var $userDirPath = _userDataDir();
+
+function setUp(){
+	_navigateTo("/demo/php/fileUpload.htm");	
+}
+
+function testFilesValidation(){
+	_setFile3(_file("file[3]"), ["upload me.txt", "uploadme2.txt"]);
+	 _assertExists(_span("File Size:312"));
+	_assertExists(_span("File Size:332"));	
+	_assertExists(_span("File Name:upload me.txt"));
+	_assertExists(_span("File Name:uploadme2.txt"));
+	_assertExists(_span("upload me.txt"));
+	_assertExists(_span("0.3046875 Kb"));
+}
+
+function testFormDataAppend(){
+	_setFile3(_file("file[3]"), ["upload me.txt"]);
+	 _assertExists(_span("upload me.txt"));
+	_assertExists(_span("0.3046875 Kb"));
+}
+
+function testFormSubmission(){
+	_setFile3(_file("file[][2]"), ["upload me.txt", "uploadme2.txt"]);
+	_click(_submit("Submit Multiple"));
+	_assertContainsText("Array", _span("type"));
+	_assertContainsText("upload me.txt", _span("file"));
+	_assertContainsText("0.3046875 Kb", _span("size"));		
+	_assertContainsText("uploadme2.txt", _span("file[1]"));
+	_assertContainsText("0.32421875 Kb", _span("size[1]"));	
+}
+
+function testActionURL(){
+	_setFile3(_file("file4"), "upload me.txt", "fileUpload.php");
+	_click(_submit("Submit Single[2]"));
+	_assertExists(_span("size"));
+	_assertContainsText("0.3046875 Kb", _span("size"));
+	_assertContainsText("Single", _span("type"));
+}
+
+_runUnitTests();

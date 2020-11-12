@@ -1,0 +1,26 @@
+_navigateTo("/demo/blobTest.htm");
+_resource("add.gif");
+_click(_button("Create File Link"));
+_click(_link("Download ready"));
+_wait(5000,_lastDownloadedFileName() != null);
+var $fileName = _lastDownloadedFileName()
+_assertEqual("myFile.txt", $fileName);
+var $textFilePath = _userDataPath("temp/myFileSaved.txt");
+_saveDownloadedAs($textFilePath);
+var $textContent = _readFile($textFilePath);
+_assertEqual("This is for Blob test", $textContent);
+_deleteFile($textFilePath);
+_clearLastDownloadedFileName();
+_click(_button("remove Links"));
+
+_click(_button("Create Image Link"));
+_click(_link("Download ready"));
+_wait(5000,_lastDownloadedFileName() != null);
+var $imgName = _lastDownloadedFileName()
+_assertEqual("add.gif", $imgName);
+var $imgFilePath = _userDataPath("temp/addSaved.gif");
+_saveDownloadedAs($imgFilePath);
+var $same = _compareImages("add.gif", $imgFilePath, 10);
+_assert($same);
+_deleteFile($imgFilePath);
+

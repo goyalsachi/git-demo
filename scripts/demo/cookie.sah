@@ -1,0 +1,20 @@
+var $cookieValue = "{ name: \"name\", age: 25 }";
+_createCookie("json", $cookieValue);
+_navigateTo("/_s_/dyn/Cookies_showAll");
+var $tableData = _getTableContents(_table(0));
+_assertEqual("json", $tableData[1][1]);
+_assertEqual($cookieValue, $tableData[1][2]);
+_click(_checkbox("_sahi_chooseAll"));
+_click(_button("Delete"));
+
+
+//below test is for cookie with path
+_navigateTo("https://www.google.com", true);
+_setValue(_textbox("Search"), "sahi");
+_click(_submit("Google Search[1]"));
+var $cookieWithPath = _cookie("CGIC", "search");
+_navigateTo("/search/_s_/dyn/Cookies_showAll", true);
+var $tableData1 = _getTableContents(_table(0));
+_assertEqual($cookieWithPath, $tableData1[1][2]);
+_click(_checkbox("_sahi_chooseAll"));
+_click(_button("Delete"));

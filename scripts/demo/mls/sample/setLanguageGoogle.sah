@@ -1,0 +1,14 @@
+_resource("hindi.properties");
+_resource("en.properties");
+_navigateTo("https://www.google.com/?hl=hi");
+//_click(_link("हिन्दी"));
+_setLanguage("hindi.properties", "en.properties");
+_assertVisible(_link("Images"));
+_click(_link("Google apps"));
+_selectDomain("ogs.google.com");
+_assertVisible(_span("Account"));
+_selectDomain();
+_click(_link("Sign in"));
+_assertExists(_span("Next"));
+_assertVisible(_span("Next"));
+_logOutput("Done");

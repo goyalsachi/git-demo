@@ -1,0 +1,20 @@
+//_navigateTo("http://sahitest.com/demo/training/");
+_navigateTo("http://en.wikipedia.org/wiki/Tytonidae");
+//_navigateTo("http://www.rediff.com/");
+_focusWindow();
+_takePageScreenShot();	
+//_log("From script: done");
+_takePageScreenShot(_table("infobox biota"), null, false, {delay:200});
+
+
+_navigateTo("http://sahitest.com/demo/");
+_click(_link("Frames Test"));
+_click(_link("Table Test[1]"));
+_focusWindow();
+_takePageScreenShot();
+_takePageScreenShot(_table(4));
+_takePageScreenShot(_table("t4"));
+
+_navigateTo("http://sahitest.com/demo/");
+_click(_link("TakePageScreenshot Test"));
+_takePageScreenShot(_table("elInsideScrolledEl"), null, false, {mode: 2});

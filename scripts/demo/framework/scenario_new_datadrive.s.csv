@@ -1,0 +1,24 @@
+"Comment","TestCase","Data","Key Word","Argument 1","Argument 2","Argument 3"
+,,,"loadSahi","sample_lib_new.sah"
+
+,,,"Create Books Data"
+,,,"D1 = Get Books Data"
+,,,"Delete Books Data"
+
+,"Check shopping cart total",,"[Documentation]","Smoke test for add books"
+,,,"Login","User Name:test","Password:secret"
+"Repeat addBooks and verifyTotal for the given data drive.",,"[sample_data.csv:BooksData]","[Repeat]"
+,,,"Add Books","Num Java:1","Num Ruby:2","NumPython:3"
+"argument 'total' will pick the data from 'totalx' header of the data drive",,,"Verify Total","Total:1750 [col:Totalx]"
+,,,"[End]"
+,,,"Logout"
+
+,"Check shopping cart total 2",,"[Documentation]","Smoke test for add books"
+,,,"Login","User Name:test","Password:secret"
+"Repeat checkTotal for the given data drive",,"[sample_data.csv:BooksData]","Check Total","Num Java:1","Num Ruby:2","NumPython:3","Total:1750 [col:Totalx]"
+,,,"Logout"
+
+,"Check shopping cart total 3",,"[Documentation]","Smoke test for add books"
+,,,"Login","User Name:test","Password:secret"
+"Data drive from database",,"[D1]","Check Total","Num Java:1","Num Ruby:2","NumPython:3","Total:1750"
+,,,"Logout"

@@ -1,0 +1,41 @@
+function testPageLoadWithWaitTimeLessThanPageLoadTime(){
+	_setWaitTimes(5000,0,0);
+	_navigateTo("/demo/php/delayedLoad.php?t=8", true);
+	_set($t, parseInt(_div("clock").innerHTML));
+	_log($t);
+	_assert($t > 2 && $t < 7);
+}	
+
+function testPageLoadWithWaitTimeMoreThanPageLoadTime(){
+	_setWaitTimes(10000,0,0);
+	_navigateTo("/demo/php/delayedLoad.php?t=6", true);
+	_set($t, parseInt(_div("clock").innerHTML));
+	_log($t);
+	_assert($t > 5 && $t < 9);
+}
+
+function testAjaxLoadWithWaitTimeLessThanAjaxLoadTime(){
+	_setWaitTimes(0,5000,0);
+	_navigateTo("/demo/php/delayedLoadAjax.php", true);
+	_set($t, parseInt(_div("clock").innerHTML));
+	_log($t);
+	_assert($t > 3 && $t < 7);
+}
+
+function testAjaxLoadWithWaitTimeMoreThanAjaxLoadTime(){
+	_setWaitTimes(0,11000,0);
+	_navigateTo("/demo/php/delayedLoadAjax.php", true);
+	_set($t, parseInt(_div("clock").innerHTML));
+	_log($t);
+	_assert($t > 4 && $t < 10);
+}
+
+function testNullValueAsWaitTime(){
+	_setWaitTimes(4000,0,0);
+	_setWaitTimes(null,1000,0);
+	_navigateTo("/demo/php/delayedLoad.php?t=8", true);
+	_set($t, parseInt(_div("clock").innerHTML));
+	_log($t);
+	_assert($t > 2 && $t < 7);
+}
+_runUnitTests();

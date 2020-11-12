@@ -1,0 +1,4 @@
+_navigateTo("crossdomaintest.htm");
+_click(_submit("Click to Invoke Another Site"));
+_assertVisible(_link(0));
+_assertContainsText("crossdomaintest.php?is_options_disable=true", _link(0)) 

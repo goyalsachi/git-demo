@@ -1,0 +1,8 @@
+_byPassWaitMechanism(true);
+_navigateTo("/demo/php/delayedLoad.php?t=4");
+var $time = parseInt(_getText(_div("clock")));
+_assert($time < 2);
+_navigateTo("/demo/php/delayedLoad.php?t=4");
+_byPassWaitMechanism(false);
+$time = parseInt(_getText(_div("clock")));
+_assert($time == 4);
