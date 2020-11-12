@@ -12,6 +12,9 @@ function testNormalClick(){
 function testCtrlClick(){
 	click("CTRL", "<ctrl>click");
 	_log("Added for second checkin");
+	_log("Added for second checkin");
+	
+	
 }
 
 function testAltClick(){
