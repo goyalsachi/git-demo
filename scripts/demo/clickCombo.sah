@@ -23,6 +23,7 @@ function testShiftClick(){
 
 function testMetaClick(){
 	click("META", "<meta>click");
+	_log("Test for jenkiins commit recent changes");
 }
 
 function testCombinationClicks(){
