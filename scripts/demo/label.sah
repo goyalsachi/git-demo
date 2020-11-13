@@ -12,6 +12,7 @@ _assertTrue(_checkbox("c3").checked);
 _click(_checkbox("c3"));
 _assertNotTrue(_checkbox("c3").checked);
 
+_log("Logs verification ");
 
 // with label encompassing textbox
 _setValue(_textbox("Username"), "abcd");
