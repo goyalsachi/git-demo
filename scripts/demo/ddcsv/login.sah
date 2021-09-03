@@ -8,3 +8,6 @@ _click(_submit("Login"));
 _assertExists(_textbox("total"));
 _assert(_isVisible(_textbox("total")));
 _assertEqual("0", _getValue(_textbox("total")));
+
+
+_log("temp")
