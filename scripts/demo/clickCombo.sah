@@ -16,9 +16,9 @@ function testCtrlClick(){
 	_log("Added for second checkin");
 	_log("Added for second checkin");
 	
-_log("4");	
+
 }
-_log("5");
+
 function testAltClick(){
 	click("ALT", "<alt>click");
 }
