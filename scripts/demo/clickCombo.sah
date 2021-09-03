@@ -26,7 +26,7 @@ function testAltClick(){
 function testShiftClick(){
 	click("SHIFT", "<shift>click");
 }
-_log("7");
+
 function testMetaClick(){
 	click("META", "<meta>click");
 	_log("Test for jenkiins commit recent changes");
