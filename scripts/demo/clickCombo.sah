@@ -19,6 +19,9 @@ function testCtrlClick(){
 
 }
 
+
+
+
 function testAltClick(){
 	click("ALT", "<alt>click");
 }
