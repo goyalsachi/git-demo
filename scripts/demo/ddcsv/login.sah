@@ -6,6 +6,7 @@ _setValue(_textbox("user"), $username);
 _setValue(_password("password"), $password);
 _click(_submit("Login"));
 _log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+_log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 _assertExists(_textbox("total"));
 _assert(_isVisible(_textbox("total")));
 _assertEqual("0", _getValue(_textbox("total")));
