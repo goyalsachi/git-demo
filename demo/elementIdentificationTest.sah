@@ -1,0 +1,11 @@
+function testIdentification(){
+	_assertExists(_submit("general"));
+	_assertVisible(_submit("common[1]"));
+	_assertExists(_submit("generic"));
+	_assertExists(_submit("general[1]"));
+	_assertExists(_submit("common"));
+	_assertExists(_submit("generic[1]"));
+}
+
+_navigateTo("/demo/elementIdentification.htm");
+_runUnitTests();

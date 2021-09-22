@@ -1,0 +1,5 @@
+function testWindowNameShouldBeBlankByDefault() {
+	// SHOULD NOT BE BLANK. popup identification mechanism will fail
+	_assertNotEqual("", window.name);
+}
+_runUnitTests();

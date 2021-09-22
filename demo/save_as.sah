@@ -1,0 +1,41 @@
+function trySaveAs($link){
+	var $filePath = "/scripts/testsaveas_x.zip";
+	var $fullFilePath = _userDataDir() +  "/scripts/testsaveas_x.zip";
+	var $resolvedPath = _userDataPath($filePath);
+	_assertEqual($fullFilePath.replace(/\\/g, '/'), $resolvedPath.replace(/\\/g, '/'));
+
+	var $exists = _fileExists($fullFilePath);
+	if($exists){
+		_deleteFile($fullFilePath);
+	}
+	$exists = _fileExists($fullFilePath);
+	_assertFalse($exists);
+
+	_click(_link($link));
+	_assertExists(_link("testsaveas.zip"));
+	_assertExists(_link("Back"));
+	
+	// BUG in Edge, The 204 response code should not cause a page navigation, yet Edge navigates. Chrome, FireFox, IE works correctly.
+	if (_isEdge()) _sendHTMLResponseAfterFileDownload(true);
+	_click(_link("testsaveas.zip"));
+	if (_isEdge()) _click(_link("Back"));
+	
+	_assertEqual("testsaveas.zip", _lastDownloadedFileName());
+	//	_wait(2000);
+	_saveDownloadedAs($filePath);
+	_clearLastDownloadedFileName();
+	_assertNotEqual("testsaveas.zip", _lastDownloadedFileName());
+	_click(_link("Back"));
+	_assertExists(_link("Link Test"));
+	
+	$exists = _fileExists($fullFilePath);
+	_assertTrue($exists);
+	if($exists){
+		_deleteFile($fullFilePath);
+	}
+}
+trySaveAs("Save As Test");
+_navigateTo("/demo/");
+_click(_link("Frames Test"));
+_click(_link("Blank Page"));
+trySaveAs("Save As Test");

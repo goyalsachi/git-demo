@@ -1,0 +1,13 @@
+"TestCase","Key Word","Argument 1","Argument 2"
+,"loadSahi","objectTest.sah"
+
+"My First Testcase","[Documentation]","My testcase description. Modify as needed"
+,"checkNumber","10"
+,"checkBoolean","true"
+,"checkString","""abc"""
+,"checkString","abc"
+,"checkJSONArray","[{""Name"":""abc"", ""Age"":23},{""Name"":""xyz"", ""Age"":25}]"
+,"checkArray","[10,30,20]"
+,"checkObject","{""Name"":""abc"", ""Age"":23}"
+,"checkArrayWithBracket","[""data1"",""data (value)"",""data(value2)"",""final data""]"
+,"checkObjectWithBracket","{""Name"":""abc(abc)"", ""Age"":23}"
