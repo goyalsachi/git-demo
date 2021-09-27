@@ -4,3 +4,4 @@ _assertExists(_f("sampleId1").uitextfield("Showing Popup1"));
 _click(_f("sampleId1").button("OK"));
 _assertExists(_f("sampleId1").uitextfield("Showing Popup2"));
 _click(_f("sampleId1").button("OK"));
+_log("lsjdflsdkjflkdsfmldksjflsdkjfl");
